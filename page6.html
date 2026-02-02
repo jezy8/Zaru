@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprise 💖</title>
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; }
+  html, body { width:100%; height:100%; font-family:'Poppins', sans-serif; overflow:hidden; }
+
+  body {
+    display:flex; justify-content:center; align-items:center;
+    background: radial-gradient(circle at top, #ffe6f0, #cceeff);
+    flex-direction:column;
+    position: relative;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(2rem,6vw,3rem);
+    color: #ff1e56;
+    text-shadow: 0 0 10px #ff80ab,0 0 20px #ff1e56;
+    margin-bottom: 1rem;
+    z-index: 10;
+  }
+
+  p {
+    font-size: clamp(1rem,2.5vw,1.4rem);
+    color:#333;
+    line-height:1.6em;
+    max-width:90%;
+    margin-bottom:2rem;
+    z-index: 10;
+  }
+
+  button {
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    font-size: clamp(1rem,2.5vw,1.3rem);
+    padding:0.8em 2em;
+    margin-top:1rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+    position: relative;
+  }
+
+  #hugButton {
+    background: linear-gradient(45deg,#ff4081,#ff80ab);
+    color:white;
+    box-shadow:0 0 20px #ff80abaa;
+  }
+  #hugButton:hover {
+    transform: scale(1.05);
+    box-shadow:0 0 35px #ff80abff;
+  }
+
+  #playGameButton {
+    display: none; /* Initially hidden */
+    background: linear-gradient(45deg,#36d1dc,#5b86e5);
+    color:white;
+    box-shadow:0 0 20px #5b86e5aa;
+  }
+  #playGameButton:hover {
+    transform: scale(1.05);
+    box-shadow:0 0 35px #5b86e5ff;
+  }
+
+  /* Floating hearts */
+  .hearts { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow:hidden; z-index:0; }
+  .heart {
+    position:absolute; width:1.2rem; height:1.2rem;
+    background:#ff1e56; transform:rotate(45deg);
+    animation: float 5s linear infinite;
+  }
+  .heart::before, .heart::after {
+    content:""; position:absolute; width:1.2rem; height:1.2rem;
+    background:#ff1e56; border-radius:50%;
+  }
+  .heart::before { top:-0.6rem; left:0; }
+  .heart::after { left:0.6rem; top:0; }
+  @keyframes float {
+    from { transform:translateY(100vh) scale(0.5) rotate(45deg); opacity:1; }
+    to { transform:translateY(-10vh) scale(1.5) rotate(45deg); opacity:0; }
+  }
+
+  /* Fireworks canvas */
+  #fireworks { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1; }
+
+  /* Balloons */
+  .balloon {
+    position: absolute;
+    width: 3rem; height: 4rem;
+    background: #ff4081;
+    border-radius: 50% 50% 50% 50%;
+    display:flex; justify-content:center; align-items:center;
+    color: white; font-weight: bold; cursor:pointer;
+    animation: floatBalloon linear infinite;
+    font-size:clamp(0.7rem,1.8vw,0.9rem);
+    text-align:center;
+    padding: 0.3rem;
+    box-shadow:0 0 15px #ff80ab88;
+    z-index:2;
+  }
+
+  @keyframes floatBalloon {
+    from { transform: translateY(100vh) scale(1); opacity:1; }
+    to { transform: translateY(-15vh) scale(1.2); opacity:0; }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width:768px){
+    h1 { font-size: clamp(1.8rem,8vw,2.8rem); }
+    p { font-size: clamp(0.9rem,4vw,1.2rem); }
+    button { font-size: clamp(0.9rem,4vw,1.2rem); padding:0.6em 1.5em; }
+    .balloon { width:2.5rem; height:3.5rem; font-size:0.7rem; }
+  }
+
+  @media (max-width:480px){
+    h1 { font-size: clamp(1.5rem,10vw,2.5rem); }
+    p { font-size: clamp(0.8rem,5vw,1rem); }
+    button { font-size: clamp(0.8rem,5vw,1rem); padding:0.5em 1.2em; }
+    .balloon { width:2rem; height:3rem; font-size:0.6rem; }
+  }
+
+</style>
+</head>
+<body>
+
+<h1>💞 Surprise My Love! 💞</h1>
+<p>Every moment with you feels magical. 🌹💖</p>
+<button id="hugButton" onclick="sendHug()">Send Me a Hug ➡️</button>
+<button id="playGameButton" onclick="location.href='page7.html'">Let's Play a Game 🎲</button>
+
+<div class="hearts"></div>
+<canvas id="fireworks"></canvas>
+
+<script>
+// Show game button after hug
+function sendHug(){
+    alert('Big Hug Sent! 🫂💖');
+    document.getElementById('playGameButton').style.display = 'inline-block';
+}
+
+// Floating hearts
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.style.left = Math.random()*100+'vw';
+  heart.style.animationDuration = (Math.random()*3 + 2)+'s';
+  document.querySelector('.hearts').appendChild(heart);
+  setTimeout(()=>heart.remove(),5000);
+}
+setInterval(createHeart, 300);
+
+// Fireworks
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+const fireworks = [];
+function random(min,max){return Math.random()*(max-min)+min;}
+class Firework{
+  constructor(){
+    this.x=random(0,canvas.width);
+    this.y=canvas.height;
+    this.tx=random(0,canvas.width);
+    this.ty=random(0,canvas.height/2);
+    this.coordinates=[[this.x,this.y]];
+    this.speed=3;
+    this.brightness=random(50,90);
+  }
+  update(i){
+    this.coordinates.push([this.x,this.y]);
+    this.coordinates.shift();
+    this.x+=Math.cos(Math.atan2(this.ty-this.y,this.tx-this.x))*this.speed;
+    this.y+=Math.sin(Math.atan2(this.ty-this.y,this.tx-this.x))*this.speed;
+    if(Math.hypot(this.tx-this.x,this.ty-this.y)<10) fireworks.splice(i,1);
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.moveTo(this.coordinates[0][0],this.coordinates[0][1]);
+    ctx.lineTo(this.x,this.y);
+    ctx.strokeStyle=`hsl(${random(0,360)},100%,${this.brightness}%)`;
+    ctx.stroke();
+  }
+}
+function loop(){
+  requestAnimationFrame(loop);
+  ctx.globalCompositeOperation='destination-out';
+  ctx.fillStyle='rgba(0,0,0,0.2)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.globalCompositeOperation='lighter';
+  if(Math.random()<0.08) fireworks.push(new Firework());
+  fireworks.forEach((fw,i)=>{fw.update(i); fw.draw();});
+}
+loop();
+
+// Click hearts
+document.body.addEventListener('click', e=>{
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.style.left = e.clientX + 'px';
+  heart.style.top = e.clientY + 'px';
+  heart.style.width = '1.5rem';
+  heart.style.height = '1.5rem';
+  document.querySelector('.hearts').appendChild(heart);
+  setTimeout(()=>heart.remove(),4000);
+});
+
+// Balloons - all at once
+const messages = [
+  "You are my joy 💞",
+  "My sunshine 🌹",
+  "Forever yours 💖",
+  "Love you endlessly 💘",
+  "My heart is yours 💕"
+];
+function createBalloon(){
+  const balloon = document.createElement('div');
+  balloon.classList.add('balloon');
+  balloon.innerText = messages[Math.floor(Math.random()*messages.length)];
+  balloon.style.left = Math.random()*90 + 'vw';
+  balloon.style.animationDuration = (Math.random()*5 + 5)+'s';
+  document.body.appendChild(balloon);
+  balloon.addEventListener('click', ()=>{
+    balloon.style.transform = 'scale(1.5)';
+    balloon.style.opacity = 0;
+    setTimeout(()=>balloon.remove(),500);
+  });
+  setTimeout(()=>balloon.remove(),10000);
+}
+// Generate 10 balloons immediately
+for(let i=0;i<10;i++) createBalloon();
+
+// Resize canvas on window resize
+window.addEventListener('resize', ()=>{
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Secret Surprise ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink1:#ff80ab;
+  --pink2:#ff1e56;
+  --bg1:#fff0f6;
+  --bg2:#dff7ff;
+  --dark:#081021;
+  --accent:#ffd166;
+}
+
+*{box-sizing:border-box;}
+html,body{
+  margin:0; padding:0; height:100%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Poppins',sans-serif;
+  background: radial-gradient(circle at top, var(--bg1), var(--bg2));
+  -webkit-font-smoothing:antialiased; padding:3vw;
+}
+
+/* CARD */
+.card{
+  width:100%; max-width:900px;
+  background:rgba(255,255,255,0.88);
+  border-radius:22px;
+  padding:clamp(18px,3vw,36px);
+  box-shadow:0 12px 40px rgba(15,16,40,0.12);
+  position:relative;
+  text-align:center;
+}
+
+/* TITLE */
+.title h2{
+  margin:0;
+  color:var(--pink2);
+  font-size:clamp(1.4rem,3.8vw,2.4rem);
+  text-shadow:0 0 12px rgba(255,128,171,0.2);
+}
+.subtitle{
+  margin-top:8px;
+  font-size:clamp(0.9rem,2vw,1.1rem);
+  color:#444;
+}
+
+/* INPUT AREA */
+.locker{ margin-top:1.6rem; display:flex; flex-wrap:wrap; gap:1rem; justify-content:center;}
+.inputWrap{ display:flex; gap:8px; align-items:center;}
+input[type=text]{
+  width:clamp(180px,42vw,420px);
+  padding:0.8rem 1rem; font-size:clamp(0.95rem,2.2vw,1.05rem);
+  border-radius:12px; border:1px solid rgba(0,0,0,0.1); outline:none; transition:.2s;
+}
+input:focus{
+  box-shadow:0 6px 18px rgba(255,30,86,0.12);
+  transform:translateY(-2px);
+}
+.hintBtn,.submitBtn{
+  padding:0.72rem 1rem; border:none; border-radius:10px; cursor:pointer; font-weight:600;
+  font-size:clamp(0.85rem,1.6vw,1rem);
+}
+.hintBtn{ background:linear-gradient(45deg,var(--pink1),var(--pink2)); color:white;}
+.submitBtn{ background:linear-gradient(45deg,#6ee7b7,#34d399); color:#04211a;}
+.hintPopup{
+  position:absolute; top:16px; right:16px; background:white; padding:8px 12px; border-radius:10px;
+  display:none; font-weight:600; color:var(--pink2);
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* OVERLAY */
+.overlay{
+  position:fixed; inset:0;
+  background:rgba(8,16,33,0); display:flex; align-items:center; justify-content:center;
+  pointer-events:none; transition:background .6s; z-index:20;
+}
+.overlay.active{ background:rgba(8,16,33,0.92); pointer-events:auto;}
+
+/* GLOW TEXT */
+.glowBox{ opacity:0; text-align:center; transition:opacity .5s; }
+.glowName{ font-family:'Great Vibes',cursive; font-size:clamp(2.4rem,8vw,5rem);
+  color:#ffd6ea; text-shadow:0 6px 22px rgba(255,30,86,0.25),0 0 36px rgba(255,200,230,0.2);
+}
+.glowLine{ font-size:clamp(1rem,2.4vw,1.4rem); margin-top:10px; color:#ffe8f2;}
+
+/* HEART METER */
+#meterBlock{ display:none; text-align:center;}
+.meterWrap{ display:flex; flex-direction:column; align-items:center; gap:12px;}
+.heartSVG{ width:clamp(140px,28vw,260px); filter:drop-shadow(0 8px 24px rgba(255,30,86,0.2)); transform-origin:center; }
+
+/* LOVE METER TEXT */
+.meterLabel{ color:white; font-size:clamp(0.95rem,2vw,1.15rem);}
+
+/* SECRET BUTTON */
+.secretBtn{ margin-top:18px; opacity:0; transform:translateY(10px); padding:0.8rem 1.6rem;
+  border-radius:28px; border:none; cursor:pointer; background:linear-gradient(45deg,#ff8a65,#ff4081);
+  color:white; font-size:clamp(0.95rem,2vw,1.1rem); font-weight:700; transition:.6s;}
+.secretBtn.show{ opacity:1; transform:translateY(0);}
+
+/* MODAL */
+.modal{ display:none; position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:clamp(320px,82vw,760px); max-height:85vh; overflow:auto;
+  background:white; border-radius:16px; padding:20px; box-shadow:0 20px 60px rgba(0,0,0,0.3); z-index:60;
+}
+.modalHeader{ display:flex; justify-content:space-between; align-items:center; }
+.modalHeader h3{ margin:0; color:var(--pink2); font-size:clamp(1.1rem,2.2vw,1.4rem); }
+.closeModal{ background:none; border:none; font-size:1.4rem; cursor:pointer; }
+.letter{ margin-top:14px; font-size:clamp(1rem,2.3vw,1.15rem); line-height:1.7; white-space:pre-wrap;
+  font-family:Georgia,'Times New Roman',serif; opacity:0; transition:opacity .3s;
+}
+
+/* LAST SURPRISE BUTTON */
+#lastSurpriseBtn{
+  opacity:0; transform:translateY(20px); padding:0.9rem 2rem; border-radius:30px; border:none;
+  background:linear-gradient(135deg,#ff8a65,#ff4081,#e040fb); color:white; font-size:clamp(1rem,2vw,1.2rem);
+  font-weight:700; cursor:pointer; transition:all 0.6s ease,box-shadow 0.3s ease; position:relative; overflow:hidden;
+  text-shadow:0 2px 6px rgba(0,0,0,0.2); box-shadow:0 4px 14px rgba(255,64,129,0.4);
+}
+#lastSurpriseBtn.show{ animation: sparkle 0.8s forwards; }
+#lastSurpriseBtn:hover{ transform:translateY(0) scale(1.08); box-shadow:0 0 20px rgba(255,64,129,0.6),0 0 40px rgba(255,128,171,0.4);}
+#lastSurpriseBtn::before,#lastSurpriseBtn::after{ content:"✨"; position:absolute; font-size:1.2rem; opacity:0; animation:twinkle 2s infinite;}
+#lastSurpriseBtn::after{ left:auto; right:-10px; top:-8px; animation-delay:1s;}
+@keyframes twinkle{0%,80%,100%{opacity:0;transform:scale(0.5);}40%{opacity:1; transform:scale(1.2) rotate(15deg);}}
+@keyframes sparkle{0%{opacity:0;transform:translateY(20px) scale(0.8);}50%{opacity:1;transform:translateY(0) scale(1.05);}100%{opacity:1;transform:translateY(0) scale(1);}}
+@media(max-width:500px){ .card{padding:14px;} .hintPopup{right:10px; top:10px;} }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="title">
+    <h2>Secret Surprise — Unlock the Love</h2>
+    <div class="subtitle">Only the most beautiful name can open this. ✨</div>
+  </div>
+  <div class="locker">
+    <div class="inputWrap">
+      <input id="nameInput" type="text" placeholder="Enter name…">
+      <button id="hintBtn" class="hintBtn">Hint</button>
+    </div>
+    <button id="submitBtn" class="submitBtn">Unlock 💖</button>
+  </div>
+  <div id="hintPopup" class="hintPopup">Zahra</div>
+  <div style="text-align:center;margin-top:10px;color:#666;">Tip: try the sweetest name. 🌹</div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay">
+  <div id="glowBox" class="glowBox">
+    <div id="glowName" class="glowName">Zahra</div>
+    <div id="glowLine" class="glowLine">you light up my world 💕🌹</div>
+  </div>
+  <div id="meterBlock">
+    <div class="meterWrap">
+      <svg class="heartSVG" viewBox="0 0 32 29">
+        <defs>
+          <linearGradient id="g1">
+            <stop offset="0%" stop-color="#ff9db8"/>
+            <stop offset="100%" stop-color="#ff1e56"/>
+          </linearGradient>
+          <mask id="m1">
+            <path d="M23.6 2.6c-2-1.9-5.3-1.6-7.1.5L16 3.6l-.5-.5C13.7 .9 10.4 .6 8.4 2.6 5.6 5.4 5.7 9.6 8.6 12.3L16 20l7.4-7.7c2.9-2.7 3-6.9.2-9.7z" fill="white"/>
+          </mask>
+        </defs>
+        <rect id="maskRect" x="0" y="29" width="32" height="0" fill="white" mask="url(#m1)"/>
+        <rect width="32" height="29" fill="url(#g1)" mask="url(#m1)"/>
+      </svg>
+      <div id="meterLabel" class="meterLabel">This is my love for you  0%</div>
+      <button id="secretBtn" class="secretBtn">Secret Messages 💌</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modalHeader">
+    <h3>Open Letter 💌</h3>
+    <button id="closeModal" class="closeModal">&times;</button>
+  </div>
+  <div id="letter" class="letter"></div>
+  <div style="text-align:center; margin-top:20px;">
+    <button id="lastSurpriseBtn">Last Surprise 😋</button>
+  </div>
+</div>
+
+<script>
+const CORRECT = "zahra";
+const nameInput = document.getElementById("nameInput");
+const hintBtn = document.getElementById("hintBtn");
+const hintPopup = document.getElementById("hintPopup");
+const submitBtn = document.getElementById("submitBtn");
+const overlay = document.getElementById("overlay");
+const glowBox = document.getElementById("glowBox");
+const glowName = document.getElementById("glowName");
+const meterBlock = document.getElementById("meterBlock");
+const maskRect = document.getElementById("maskRect");
+const meterLabel = document.getElementById("meterLabel");
+const secretBtn = document.getElementById("secretBtn");
+const modal = document.getElementById("modal");
+const letter = document.getElementById("letter");
+const closeModal = document.getElementById("closeModal");
+const lastBtn = document.getElementById("lastSurpriseBtn");
+const heartSVG = document.querySelector(".heartSVG");
+let typingInterval;
+
+/* HINT BUTTON */
+hintBtn.onclick = ()=>{
+  hintPopup.style.display="block";
+  hintPopup.style.opacity="0";
+  requestAnimationFrame(()=> hintPopup.style.opacity="1");
+  setTimeout(()=>{
+    hintPopup.style.opacity="0";
+    setTimeout(()=> hintPopup.style.display="none",200);
+  },2000);
+};
+
+/* SUBMIT */
+submitBtn.onclick = tryUnlock;
+nameInput.addEventListener("keydown", e=>{ if(e.key==="Enter") tryUnlock(); });
+
+function tryUnlock(){
+  const val = nameInput.value.trim().toLowerCase();
+  if(val===CORRECT) runUnlock(val);
+  else {
+    nameInput.style.transform="translateX(-6px)";
+    setTimeout(()=> nameInput.style.transform="translateX(6px)",80);
+    setTimeout(()=> nameInput.style.transform="",160);
+  }
+}
+
+/* MAIN UNLOCK */
+function runUnlock(name){
+  overlay.classList.add("active");
+  glowName.textContent = capitalize(name);
+  glowBox.style.opacity="1";
+  setTimeout(()=>{
+    glowBox.style.opacity="0";
+    meterBlock.style.display="block";
+    animateHeart(0,100,2400);
+  },3000);
+}
+
+/* HEART ANIMATION + PULSING */
+function animateHeart(from,to,duration){
+  const start = performance.now();
+  function frame(now){
+    const t = Math.min(1,(now-start)/duration);
+    const eased = 1 - Math.pow(1-t,3);
+    const height = 29*eased;
+    maskRect.setAttribute("y",29-height);
+    maskRect.setAttribute("height",height);
+    meterLabel.textContent = `This is my love for you — ${Math.round(eased*100)}%`;
+    heartSVG.style.transform = `scale(${1 + 0.08*Math.sin(t*Math.PI*4)})`;
+    if(t<1) requestAnimationFrame(frame);
+    else setTimeout(()=> secretBtn.classList.add("show"),1500);
+  }
+  requestAnimationFrame(frame);
+}
+
+function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+/* SECRET LETTER with LINE BY LINE TYPING */
+secretBtn.onclick = ()=>{
+  modal.style.display="block";
+  letter.textContent="";
+  letter.style.opacity = "1";
+  lastBtn.classList.remove("show");
+  clearInterval(typingInterval);
+
+  const text = [
+    "Dear Zahra,",
+    "",
+    "Your smile is magic. Your presence is comfort. And everything about you makes the world feel softer.",
+    "",
+    "This little surprise is just a tiny piece of how much I adore you.",
+    "",
+    "Always yours,",
+    "Jezzy 💕"
+  ];
+
+  let line=0;
+  function typeLine(){
+    if(line>=text.length){
+      lastBtn.classList.add("show");
+      return;
+    }
+    let i=0;
+    letter.textContent += "";
+    typingInterval = setInterval(()=>{
+      letter.textContent += text[line].charAt(i);
+      i++;
+      if(i>=text[line].length){
+        clearInterval(typingInterval);
+        letter.textContent += "\n";
+        line++;
+        setTimeout(typeLine, 250);
+      }
+    },18);
+  }
+  typeLine();
+};
+
+/* LAST BUTTON */
+lastBtn.onclick = ()=> window.location.href="nikkah.html";
+
+/* CLOSE MODAL */
+closeModal.onclick = ()=>{
+  modal.style.display="none";
+  clearInterval(typingInterval);
+};
+</script>
+</body>
+</html>

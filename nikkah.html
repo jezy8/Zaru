@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Birthday Surprise 🎂</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+/* ================= BODY ================= */
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,#ffe6f0,#dff7ff);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  overflow:hidden;
+}
+
+/* ================= CARD ================= */
+.card{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  padding:30px;
+  border-radius:25px;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,0.15);
+  position:relative;
+  z-index:2;
+}
+
+/* ================= TEXT ================= */
+h1{
+  font-family:'Great Vibes',cursive;
+  font-size:2.6rem;
+  color:#ff4081;
+  margin-bottom:10px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:12px;
+  border:1px solid #ccc;
+  font-size:1rem;
+}
+
+/* ================= BUTTONS ================= */
+.buttons{
+  display:flex;
+  gap:12px;
+  margin-top:12px;
+}
+
+button{
+  flex:1;
+  min-height:44px;
+  border:none;
+  border-radius:14px;
+  font-weight:600;
+  cursor:pointer;
+  font-size:1rem;
+}
+
+.yes{background:#34d399;color:#fff;}
+.no{background:#ff5c5c;color:#fff;}
+.disabled{opacity:0.5;pointer-events:none;}
+
+/* ================= MESSAGE ================= */
+.message{
+  margin-top:18px;
+  font-size:1.5rem;
+  font-weight:700;
+  color:#ff4081;
+  opacity:0;
+}
+
+.message.show{
+  opacity:1;
+  animation:pop 1s ease forwards;
+}
+
+@keyframes pop{
+  0%{transform:scale(0.5)}
+  60%{transform:scale(1.2)}
+  100%{transform:scale(1)}
+}
+
+/* ================= LEAVE BUTTON ================= */
+.leaveBtn{
+  margin-top:20px;
+  padding:12px;
+  width:100%;
+  background:linear-gradient(45deg,#ffb347,#ff4081);
+  color:#fff;
+  border-radius:25px;
+  font-weight:700;
+  opacity:0;
+  pointer-events:none;
+}
+
+.leaveBtn.show{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* ================= ANIMATIONS ================= */
+.heart,.flower{
+  position:absolute;
+  font-size:22px;
+  animation:float linear forwards;
+}
+
+@keyframes float{
+  to{
+    transform:translateY(-120vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:480px){
+  h1{font-size:2.2rem;}
+  .message{font-size:1.3rem;}
+  .buttons{flex-direction:column;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Birthday Surprise 🎂</h1>
+
+  <input id="name" type="text" placeholder="Your Name">
+  <input id="age" type="number" placeholder="Your Age">
+
+  <div class="buttons">
+    <button class="yes disabled" id="yesBtn">Yes 💖</button>
+    <button class="no disabled" id="noBtn">No 🙈</button>
+  </div>
+
+  <div class="message" id="msg"></div>
+
+  <button class="leaveBtn" id="leaveBtn">Click to Leave 💌</button>
+</div>
+
+<!-- MUSIC -->
+<audio id="music" src="https://cdn.pixabay.com/audio/2022/03/15/audio_42b0eae77c.mp3"></audio>
+
+<script>
+const nameI=document.getElementById("name");
+const ageI=document.getElementById("age");
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+const msg=document.getElementById("msg");
+const leaveBtn=document.getElementById("leaveBtn");
+const music=document.getElementById("music");
+
+/* ENABLE BUTTONS */
+function check(){
+  if(nameI.value && ageI.value){
+    yesBtn.classList.remove("disabled");
+    noBtn.classList.remove("disabled");
+  }
+}
+nameI.oninput=check;
+ageI.oninput=check;
+
+/* START FUNCTION */
+function start(){
+  music.play();
+  msg.innerHTML=`🎉 Happy ${ageI.value}th Birthday <br>${nameI.value} 🎂`;
+  msg.classList.add("show");
+  leaveBtn.classList.add("show");
+  hearts();
+  flowers();
+}
+
+/* BUTTON EVENTS */
+yesBtn.onclick=()=>!yesBtn.classList.contains("disabled") && start();
+
+noBtn.onclick=()=>{
+  if(noBtn.classList.contains("disabled"))return;
+  noBtn.textContent="Yes 😄";
+  noBtn.className="yes";
+  start();
+};
+
+leaveBtn.onclick=()=>{
+  alert("Thanks for watching 💖");
+};
+
+/* HEARTS */
+function hearts(){
+  for(let i=0;i<20;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.textContent="💖";
+    h.style.left=Math.random()*100+"vw";
+    h.style.bottom="-20px";
+    h.style.animationDuration=3+Math.random()*3+"s";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  }
+}
+
+/* FLOWERS */
+function flowers(){
+  for(let i=0;i<20;i++){
+    let f=document.createElement("div");
+    f.className="flower";
+    f.textContent="🌸";
+    f.style.left=Math.random()*100+"vw";
+    f.style.bottom="-20px";
+    f.style.animationDuration=3+Math.random()*3+"s";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),6000);
+  }
+}
+</script>
+
+</body>
+</html>

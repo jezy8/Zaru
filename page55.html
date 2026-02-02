@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html,body{
+  width:100%;
+  height:100%;
+  font-family:'Noto Nastaliq Urdu', serif;
+  overflow:hidden;
+}
+
+.page{
+  position:absolute;
+  inset:0;
+  padding:6vw;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle at top,#ffe6f0,#cceeff);
+}
+
+.hidden{display:none;}
+
+h1{
+  font-size:clamp(1.8rem,5vw,3rem);
+  color:#d81b60;
+  margin-bottom:1.5rem;
+  text-align:center;
+  text-shadow:0 0 10px #ff80ab;
+}
+
+/* Scrollable poetry area */
+#poetry-container{
+  width:100%;
+  max-width:950px;
+  max-height:55vh;
+  overflow-y:auto;
+  padding:1rem;
+}
+
+#poetry{
+  font-size:clamp(1rem,3vw,1.35rem);
+  line-height:2.7em;
+  text-align:center;
+  color:#333;
+}
+
+/* Buttons */
+.buttons{
+  margin-top:1.5rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.8rem;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all 0.8s ease;
+}
+
+.buttons.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+button{
+  padding:0.8em 2.4em;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#ff4081,#ff80ab);
+  color:white;
+  font-size:1.05rem;
+  cursor:pointer;
+  box-shadow:0 0 20px #ff80ab;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 30px #ff4081;
+}
+
+/* Hearts */
+.hearts{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.heart{
+  position:absolute;
+  width:1.2rem;
+  height:1.2rem;
+  background:#ff1e56;
+  transform:rotate(45deg);
+  animation:float 5s linear infinite;
+}
+
+.heart::before,.heart::after{
+  content:"";
+  position:absolute;
+  width:1.2rem;
+  height:1.2rem;
+  background:#ff1e56;
+  border-radius:50%;
+}
+
+.heart::before{top:-0.6rem;left:0;}
+.heart::after{left:0.6rem;top:0;}
+
+@keyframes float{
+  from{transform:translateY(100vh) scale(0.5) rotate(45deg);opacity:1;}
+  to{transform:translateY(-10vh) scale(1.4) rotate(45deg);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page">
+  <h1>🎂 سالگرہ مبارک 💖</h1>
+  <button onclick="start()">open yout suprise </button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page hidden">
+  <h1>💞 دل سے</h1>
+
+  <div id="poetry-container">
+    <div id="poetry"></div>
+  </div>
+
+  <div class="buttons" id="buttons">
+    <button onclick="location.href='page6.html'">Next Surprise ➡️</button>
+    <button onclick="location.reload()">💖 دوبارہ</button>
+  </div>
+
+  <div class="hearts"></div>
+</div>
+
+<script>
+const lines = [
+  "تیری صورت سے ہے عالم میں بہاروں کو ثبات",
+  "تیری آنکھوں کے سوا اس دنیا میں رکھا کیا ہے",
+  "",
+  "شام و صبح، تیری یاد دل کو چھو جاتی ہے، زہرا 💕",
+  "",
+  "کبھی آؤ ملنے، اور دیکھوں وہ شرمائی آنکھیں جو صرف تمہارے لیے نم ہوتی ہیں",
+  "ت",
+  "",
+  "کبھی آؤ ملنے مجھ سے، تو محسوس کرنا",
+  "کہ کیسے میں نے تمہارے تصور میں اپنی زندگی گزاری ہے 💕",
+  "",
+  "──────────────",
+  "",
+  "کیا تیری مثال دوں میں صبحِ ازل کے نور سے؟",
+  "تو تو ہر آنگن کی روشنی سے بھی زیادہ روشن ہے",
+  "تو وہ گل ہے جو فنا نہیں ہوتا ہواؤں کے جھونکوں سے",
+  "نہ بادِ صبا کی ضرب میں ہے، نہ وقت کی سانس میں گم ہے",
+  "",
+  "تو وہ پھول ہے جو ہر خزاں کے بعد بھی مہکا کرتا ہے",
+  "جس کا رنگ ابدی ہے، جسے وقت مٹا نہیں سکتا ہے",
+  "",
+  "کبھی سورج بھی پگھل جاتا ہے اپنی تابشوں کے بوجھ میں",
+  "کبھی چاند بھی گم ہو جاتا ہے خود اپنی روشنی کے دھند میں",
+  "",
+  "ہر حسن، ہر روپ، ہر جلوہ پہ زوال لکھا گیا ہے",
+  "مگر تو مثالِ ابدی ہے، تجھے لازوال لکھا گیا ہے",
+  "",
+  "نہ وقت کے گریز سے تیرا حسن کم ہو پائے گا",
+  "نہ قسمت کے حوالے تیرا نام جائے گا",
+  "",
+  "تجھے تو میں نے لکھ دیا ہے لفظوں کی تہذیب میں",
+  "تیرے لیے میری ہر صورت، ہر مصرع میں یاد بستی ہے",
+  "",
+  "اور جب تک یہ زمین اپنے محور پہ گھومتی رہے گی",
+  "اور جب تک کوئی نگاہ لکھنے کا ہنر رکھے گی",
+  "",
+  "تب تک میرے ہر شعر میں تیری محبت کا نام زندہ رہے گا",
+  "تب تک میرے ہر لفظ میں تیرا وجود نمایاں رہے گا"
+];
+
+let lineIndex=0,charIndex=0;
+const speed=30; // ⭐ speed thori fast kar di
+
+function start(){
+  document.getElementById("page1").classList.add("hidden");
+  document.getElementById("page2").classList.remove("hidden");
+  typeWriter();
+}
+
+function typeWriter(){
+  const poetry=document.getElementById("poetry");
+  const container=document.getElementById("poetry-container");
+
+  if(lineIndex<lines.length){
+    if(charIndex<lines[lineIndex].length){
+      poetry.innerHTML+=lines[lineIndex].charAt(charIndex);
+      charIndex++;
+      container.scrollTop = container.scrollHeight;
+      setTimeout(typeWriter,speed);
+    }else{
+      poetry.innerHTML+="<br>";
+      charIndex=0;
+      lineIndex++;
+      setTimeout(typeWriter,400);
+    }
+  }else{
+    setTimeout(()=>{
+      document.getElementById("buttons").classList.add("show");
+      document.getElementById("bgMusic").play();
+    },1000);
+  }
+}
+
+/* Hearts */
+function createHeart(){
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.animationDuration=(Math.random()*3+2)+"s";
+  document.querySelector(".hearts").appendChild(heart);
+  setTimeout(()=>heart.remove(),5000);
+}
+setInterval(createHeart,300);
+</script>
+
+</body>
+</html>

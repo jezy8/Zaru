@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Hug From My Heart 💖</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Poppins',sans-serif;
+  background:linear-gradient(135deg,#020024,#3b0764,#0f172a);
+  color:#fff;
+  overflow:hidden;
+}
+
+/* Fireworks */
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* Floating hearts */
+.heart{
+  position:absolute;
+  bottom:-20px;
+  font-size:1.2rem;
+  animation:float 6s linear infinite;
+}
+@keyframes float{
+  from{transform:translateY(0);opacity:1;}
+  to{transform:translateY(-120vh);opacity:0;}
+}
+
+/* Hug Card */
+#card{
+  z-index:2;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(14px);
+  padding:45px 35px;
+  border-radius:26px;
+  max-width:420px;
+  width:90%;
+  text-align:center;
+  box-shadow:0 0 60px #ff69b4aa;
+  animation:breath 4s ease-in-out infinite;
+}
+@keyframes breath{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+}
+
+#text{
+  font-size:clamp(1rem,2.6vw,1.6rem);
+  line-height:1.6;
+  min-height:140px;
+  text-shadow:0 0 14px #ff69b4;
+}
+
+/* Button */
+button{
+  margin-top:25px;
+  padding:0.9em 2.6em;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,#ff4081,#ff80ab);
+  color:white;
+  font-size:1.1rem;
+  cursor:pointer;
+  box-shadow:0 0 25px #ff80ab;
+  transition:0.3s;
+  opacity:0;
+}
+button.show{
+  opacity:1;
+}
+button:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 40px #ff80ab;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Music (auto starts after first interaction) -->
+<audio id="music" loop>
+  <source src="hug-music.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="fire"></canvas>
+
+<div id="card">
+  <div id="text"></div>
+  <button id="nextBtn" onclick="goNext()">Next Surprise ➡️</button>
+</div>
+
+<script>
+// ---------- Time based line ----------
+const hour = new Date().getHours();
+let greeting = "I hope you’re smiling right now 💖";
+if(hour < 12) greeting = "Good morning, my sunshine ☀️";
+else if(hour >= 18) greeting = "Good night, my moon 🌙";
+
+// ---------- Typewriter text ----------
+const message =
+`${greeting}\n\n` +
+`We may not meet irl,\n` +
+`but close your eyes for a second…\n\n` +
+`This is me,\n` +
+`holding you tight 🫂💖\n\n` +
+`I love you, Zahra`;
+
+let i = 0;
+const speed = 45;
+const textEl = document.getElementById("text");
+
+function type(){
+  if(i < message.length){
+    textEl.innerHTML += message[i] === "\n" ? "<br>" : message[i];
+    i++;
+    setTimeout(type, speed);
+  } else {
+    // Emotional finish
+    document.getElementById("card").style.boxShadow =
+      "0 0 90px #ff80abff";
+    document.getElementById("nextBtn").classList.add("show");
+  }
+}
+type();
+
+// ---------- Hearts ----------
+function heart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💖";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(Math.random()*3+4)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),7000);
+}
+setInterval(heart,700);
+
+// ---------- Fireworks ----------
+const canvas=document.getElementById("fire");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+
+function fw(){
+  ctx.fillStyle="rgba(0,0,0,0.25)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  if(Math.random()<0.05){
+    ctx.fillStyle=`hsl(${Math.random()*360},100%,60%)`;
+    ctx.fillRect(Math.random()*canvas.width,
+                 Math.random()*canvas.height/2,
+                 3,3);
+  }
+  requestAnimationFrame(fw);
+}
+fw();
+
+// ---------- Music auto start after first tap ----------
+document.body.addEventListener("click", ()=>{
+  document.getElementById("music").play();
+},{once:true});
+
+// ---------- Next ----------
+function goNext(){
+  document.body.style.opacity="0";
+  setTimeout(()=>location.href="page55.html",600);
+}
+</script>
+
+</body>
+</html>

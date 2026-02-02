@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposal</title>
+<style>
+body {
+  margin:0; padding:0; background:#0f172a; font-family:'Poppins',sans-serif;
+  display:flex; justify-content:center; align-items:center; flex-direction:column; height:100vh; color:white; overflow:hidden;
+  position:relative;
+}
+#ringBox {
+  width:300px; height:200px; background:#3b0764; border-radius:15px; display:flex; justify-content:center; align-items:center; flex-direction:column; box-shadow:0 0 40px #ff69b4aa; cursor:pointer; position:relative; transition:0.5s;
+}
+#ring { width:0; height:0; border-radius:50%; background:gold; position:absolute; bottom:20px; opacity:0; transition:0.7s; box-shadow:0 0 30px gold; }
+#proposalText { font-size:1.8rem; margin-top:20px; opacity:0; transition:0.7s; text-shadow:0 0 10px #ff69b4; color:#fff; text-align:center; }
+#ringBox.open #ring { width:60px; height:60px; opacity:1; }
+#ringBox.open #proposalText { opacity:1; }
+#clickText { position:absolute; top:10px; font-size:1.2rem; color:#fff; }
+#nextSurprise {
+  display:none; position:absolute; bottom:50px; padding:12px 30px; font-size:1.2rem;
+  border:none; border-radius:25px; cursor:pointer; font-weight:bold; background:#fff; color:#d1006b;
+  transition:0.3s;
+}
+#nextSurprise:hover { transform:scale(1.1); }
+</style>
+</head>
+<body>
+
+<div id="ringBox">
+  <div id="clickText">Click me 💕</div>
+  <div id="ring"></div>
+  <div id="proposalText">hum tere Pyar me Saara alam kho bethe tum khte ho ese Pyar ko bhol jao...</div>
+</div>
+
+<button id="nextSurprise" onclick="location.href='page4.html'">Surprise 3 ➡️</button>
+
+<script>
+const ringBox = document.getElementById("ringBox");
+const clickText = document.getElementById("clickText");
+const nextBtn = document.getElementById("nextSurprise");
+
+ringBox.onclick = () => {
+  ringBox.classList.add("open");
+  clickText.style.display = "none";
+
+  // Button show after ring animation
+  setTimeout(() => {
+    nextBtn.style.display = "block";
+  }, 800); // thoda delay for ring animation
+};
+</script>
+
+</body>
+</html>
